@@ -1,0 +1,8 @@
+django
+django-cors-headers
+djangorestframework
+pandas
+scikit-learn==1.5.2
+xgboost
+rest_framework
+corsheaders

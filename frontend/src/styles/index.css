@@ -1,0 +1,150 @@
+* {
+  margin: 15;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+h1 {
+  color: #06038D;
+  font-family: Georgia, serif;
+}
+
+body {
+  display: flex; /* Enables flexbox layout */
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
+  min-height: 100vh; /* Ensure it spans the full viewport height */
+  padding: 20px; /* Reduced padding for smaller screens */
+  margin: 10px 0;
+  background: #fff;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 103, 31, 1) 0%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(4, 106, 56, 1) 100%
+  );
+  font-size: calc(10px + 2vmin);
+  font-family: Verdana, sans-serif;
+}
+
+#root {
+  width: 50%; /* Centered size for the container */
+  max-width: 600px; /* Optional: Prevent it from getting too wide */
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(9px);
+  color: #000;
+  border-radius: 12px;
+  padding: 30px 40px;
+  margin: 10px 0 10px;
+}
+
+.center {
+  display: flex; /* Enables flexbox layout */
+  flex-direction: column;
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
+  text-align: center;
+}
+
+.arrow {
+    margin-left: 5px ;
+  display: inline-block;
+  width: 10px; /* Adjust for size */
+  height: 10px; /* Adjust for size */
+  border-top: 3px solid #fff; /* Arrow thickness */
+  border-right: 3px solid #fff; /* Arrow thickness */
+}
+
+.arrow-left {
+  transform: rotate(-135deg);
+}
+
+button {
+  background-color: #111827;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  flex: 0 0 auto;
+  font-family: "Inter var", ui-sans-serif, system-ui, -apple-system, system-ui,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+  padding: 0.75rem 1.2rem;
+  text-align: center;
+  text-decoration: none #6b7280 solid;
+  text-decoration-thickness: auto;
+  transition-duration: 0.2s;
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: auto;
+  margin-top: 30px;
+}
+
+button:hover,
+button:disabled {
+  background-color: #374151;
+}
+
+button:focus {
+  box-shadow: none;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+#previous {
+    margin-left: 10px;
+}
+
+input {
+  width: 100%;
+  height: 100%;
+  background: #fff !important;
+  border-radius: 12px !important;
+  outline: none !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  font-size: 16px !important;
+  color: #000 !important;
+  padding: 20px 45px 20px 20px !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: calc(12px + 2vmin); /* Adjust font size for smaller screens */
+  }
+
+  #root {
+    width: 95%; /* Make root almost full-width on smaller screens */
+    padding: 15px; /* Reduce padding for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: calc(14px + 2vmin); /* Larger font size for very small screens */
+  }
+
+  #root {
+    width: 100%; /* Full width on very small screens */
+    padding: 10px; /* Even smaller padding */
+  }
+}
+
