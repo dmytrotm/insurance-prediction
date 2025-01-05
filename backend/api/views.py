@@ -19,7 +19,7 @@ def result(request):
             loaded_pipeline = pickle.load(f)
     elif country == "america":
         serializer = HealthDataSerializerAmerica(data=request.data)
-        with open('stacking_pipeline (1).pkl', 'rb') as f:
+        with open('stacking_pipeline.pkl', 'rb') as f:
             loaded_pipeline = pickle.load(f)
     else:
         # If country is not recognized, return an error response
@@ -77,7 +77,7 @@ def get_questions(request):
             {"text": "Do you smoke?", "type": "option", "options": ["yes", "no"], "values": ["1", "0"]},
             {"text": "What region are you from?", "type": "option", "options": ["southwest", "southeast", "northwest", "northeast"], "values": ["southwest", "southeast", "northwest", "northeast"]},
             {"text": "Do you have any children?", "type": "option", "options": ["yes", "no"], "values": ["1", "0"]},
-            {"text": "How many children do ou have?", "type": "number", "min": 0, "max": 5}
+            {"text": "How many children do you have?", "type": "number", "min": 0, "max": 5}
         ],
     }
 

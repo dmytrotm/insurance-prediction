@@ -25,18 +25,16 @@ cd insurance-prediction
 ```
 
 ### 3. Create and activate a virtual environment
-Create a virtual environment to isolate the project's Python dependencies:
-```bash
-python -m venv venv
-```
-Activate the virtual environment:
+Create a virtual environment to isolate the project's Python dependencies and activate it:
 
 - On Windows:
     ```bash
+    python -m venv venv
     .\venv\Scripts\activate
     ```
 - On macOS/Linux:
     ```bash
+    python3 -m venv venv
     source venv/bin/activate
     ```
 
@@ -48,13 +46,7 @@ pip install -r requirements.txt
 ```
 
 ### 5. Set up the backend
-With the virtual environment activated, install the required Python packages:
-
-1. Navigate to the backend folder:
-    ```bash
-    cd backend
-    ```
-2. Run the Django development server:
+Run the Django development server:
     - On Windows:
         ```bash
         python manage.py runserver
@@ -67,7 +59,10 @@ With the virtual environment activated, install the required Python packages:
 The backend will be available at `http://localhost:8000`.
 
 ### 6. Set up the frontend
-1. Open a new terminal window.
+1. Open a new terminal window, if you are in `backend` 
+```bash 
+cd ..
+```
 2. Activate the virtual environment again:
     - On Windows:
         ```bash

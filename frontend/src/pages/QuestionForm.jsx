@@ -44,9 +44,7 @@ const QuestionForm = () => {
     if (currentQuestion?.type === "number") {
       const numericValue = parseInt(value, 10);
 
-      // If the current question is about weight, validate it with BMI
       if (currentQuestion.key === "weight" && answers[1]) {
-        // Assuming "height" is question 1
         const height = parseInt(answers[1], 10);
         if (height) {
           const bmi = calculateBMI(height, numericValue);
@@ -58,7 +56,6 @@ const QuestionForm = () => {
         }
       }
 
-      // Standard numeric validation
       if (isNaN(numericValue)) {
         setWarning("Value should be a valid number.");
         setIsNextDisabled(true);
@@ -82,7 +79,7 @@ const QuestionForm = () => {
       }
     } else if (currentQuestion?.type === "option") {
       setWarning("");
-      setIsNextDisabled(false); // No validation needed for option questions
+      setIsNextDisabled(false); 
     } else {
       setWarning("");
       setIsNextDisabled(false);
@@ -116,21 +113,30 @@ const QuestionForm = () => {
     }
   };
 
+  const isCurrentQuestionAnswered = () => {
+    return answers[currentStep] !== undefined && answers[currentStep] !== "";
+  };
+
   const handleNext = () => {
     if (currentStep < questions.length - 1) {
-      setCurrentStep(currentStep + 1);
-      setIsNextDisabled(true);
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      setIsNextDisabled(!answers[nextStep]); // Check if the next question is already answered
     } else {
       submitAnswers();
     }
   };
 
-  const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-      setIsNextDisabled(false); // Assume previous step is valid
-    }
-  };
+
+ const handlePrevious = () => {
+   if (currentStep > 0) {
+     const previousStep = currentStep - 1;
+     setCurrentStep(previousStep);
+     setIsNextDisabled(!answers[previousStep]);
+     setWarning("");
+   }
+ };
+
 
   const submitAnswers = async () => {
     let data = {};
@@ -155,7 +161,7 @@ const QuestionForm = () => {
         sex: answers[3],
         bmi: calculateBMI(answers[1], parseInt(answers[2])),
         children: parseInt(answers[7]),
-        smoker: answers[4],
+        smoker: answers[4] === "1" ? "yes" : "no",
         region: answers[5],
       };
     }
