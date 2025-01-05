@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-class HealthDataSerializer(serializers.Serializer):
+class HealthDataSerializerIndia(serializers.Serializer):
     Age = serializers.IntegerField()
     Diabetes = serializers.IntegerField()
     BloodPressureProblems = serializers.IntegerField()
@@ -10,3 +10,12 @@ class HealthDataSerializer(serializers.Serializer):
     HistoryOfCancerInFamily = serializers.IntegerField()
     NumberOfMajorSurgeries = serializers.IntegerField()
     BMI = serializers.FloatField()
+
+class HealthDataSerializerAmerica(serializers.Serializer):
+    age = serializers.IntegerField()
+    sex = serializers.CharField()
+    bmi = serializers.FloatField()    
+    children = serializers.IntegerField()
+    smoker = serializers.CharField()
+    region = serializers.CharField()
+    

@@ -1,8 +1,9 @@
 import React from "react";
+import Options from "./Options";
 
-const Question = ({ currentStep, question, answer, onAnswerChange, onYesNoChange }) => {
+const Question = ({ currentStep, question, answer, onAnswerChange, onOptionChange }) => {
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <h2>Question {currentStep + 1}</h2>
       <p>{question.text}</p>
 
@@ -16,13 +17,8 @@ const Question = ({ currentStep, question, answer, onAnswerChange, onYesNoChange
         />
       )}
 
-      {question.type === "yesno" && (
-        <div style={{ marginBottom: "20px" }}>
-          <button onClick={() => onYesNoChange("1")} style={{ marginRight: "10px" }}>
-            Yes
-          </button>
-          <button onClick={() => onYesNoChange("0")}>No</button>
-        </div>
+      {question.type === "option" && (
+        <Options options={question.options} onOptionClick={onOptionChange} />
       )}
     </div>
   );

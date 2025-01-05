@@ -1,18 +1,39 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading";
-import Question from "../components/Question"; // Import the Question component
+import Question from "../components/Question";
 
-const QuestionForm = ({ questions }) => {
+const QuestionForm = () => {
   const navigate = useNavigate();
+  const { country } = useParams();
+  const [questions, setQuestions] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(false);
   const [warning, setWarning] = useState("");
-  const [isNextDisabled, setIsNextDisabled] = useState(true); // Track if "Next" should be disabled
+  const [isNextDisabled, setIsNextDisabled] = useState(true);
 
-  const currentQuestion = questions[currentStep];
+  useEffect(() => {
+    // Fetch questions from backend
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/get-questions/?country=${country}`
+        );
+        setQuestions(response.data.questions);
+      } catch (err) {
+        console.error("Error fetching questions:", err);
+        setWarning("Could not load questions for the selected country.");
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [country]);
+
+  // Safely get the current question
+  const currentQuestion = questions[currentStep] || {};
 
   const handleInputChange = (value) => {
     setAnswers({
@@ -20,7 +41,7 @@ const QuestionForm = ({ questions }) => {
       [currentStep]: value,
     });
 
-    if (currentQuestion.type === "number") {
+    if (currentQuestion?.type === "number") {
       const numericValue = parseInt(value, 10);
 
       // If the current question is about weight, validate it with BMI
@@ -29,8 +50,8 @@ const QuestionForm = ({ questions }) => {
         const height = parseInt(answers[1], 10);
         if (height) {
           const bmi = calculateBMI(height, numericValue);
-          if (bmi < 10 || bmi > 50) {
-            setWarning("BMI should be between 10 and 50. Adjust the weight.");
+          if (bmi < 15 || bmi > 50) {
+            setWarning("BMI should be between 15 and 50. Adjust the weight.");
             setIsNextDisabled(true);
             return;
           }
@@ -59,23 +80,36 @@ const QuestionForm = ({ questions }) => {
         setWarning("");
         setIsNextDisabled(false);
       }
-    } else if (currentQuestion.type === "yesno") {
+    } else if (currentQuestion?.type === "option") {
       setWarning("");
-      setIsNextDisabled(false); // No validation needed for yesno questions
+      setIsNextDisabled(false); // No validation needed for option questions
     } else {
       setWarning("");
       setIsNextDisabled(false);
     }
   };
 
-  const handleYesNoChange = (value) => {
+  const handleOption = (value) => {
+    const optionMappings = {
+      yes: "1",
+      no: "0",
+      male: "male",
+      female: "female",
+      southwest: "southwest",
+      southeast: "southeast",
+      northwest: "northwest",
+      northeast: "northeast",
+    };
+
+    const mappedValue = optionMappings[value] || value;
+
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [currentStep]: value,
+      [currentStep]: mappedValue,
     }));
 
-    if (currentStep === 9 && value === "0") {
-      answers[10] = "0";
+    if (currentStep === questions.length - 2 && mappedValue === "0") {
+      answers[questions.length - 1] = "0";
       submitAnswers();
     } else {
       handleNext();
@@ -85,7 +119,7 @@ const QuestionForm = ({ questions }) => {
   const handleNext = () => {
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
-      setIsNextDisabled(true); // Reset validation for the next step
+      setIsNextDisabled(true);
     } else {
       submitAnswers();
     }
@@ -99,31 +133,49 @@ const QuestionForm = ({ questions }) => {
   };
 
   const submitAnswers = async () => {
-    const data = {
-      Age: parseInt(answers[0]),
-      Diabetes: parseInt(answers[3]),
-      BloodPressureProblems: parseInt(answers[5]),
-      AnyTransplants: parseInt(answers[6]),
-      AnyChronicDiseases: parseInt(answers[7]),
-      KnownAllergies: parseInt(answers[4]),
-      HistoryOfCancerInFamily: parseInt(answers[8]),
-      NumberOfMajorSurgeries: parseInt(answers[10]),
-      BMI: calculateBMI(answers[1], parseInt(answers[2])),
-    };
+    let data = {};
 
+    if (country === "india") {
+      data = {
+        Age: parseInt(answers[0]),
+        Diabetes: parseInt(answers[3]),
+        BloodPressureProblems: parseInt(answers[5]),
+        AnyTransplants: parseInt(answers[6]),
+        AnyChronicDiseases: parseInt(answers[7]),
+        KnownAllergies: parseInt(answers[4]),
+        HistoryOfCancerInFamily: parseInt(answers[8]),
+        NumberOfMajorSurgeries: parseInt(answers[10]),
+        BMI: calculateBMI(answers[1], parseInt(answers[2])),
+      };
+    }
+
+    if (country === "america") {
+      data = {
+        age: parseInt(answers[0]),
+        sex: answers[3],
+        bmi: calculateBMI(answers[1], parseInt(answers[2])),
+        children: parseInt(answers[7]),
+        smoker: answers[4],
+        region: answers[5],
+      };
+    }
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:8000/api/result/", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await axios.post(
+        `http://localhost:8000/api/result/?country=${country}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const prediction = res.data.prediction;
 
       if (prediction !== undefined) {
-        navigate("/result", { state: { prediction } });
+        navigate("/result", { state: { prediction, country } });
       } else {
         console.error("No prediction returned from the backend");
       }
@@ -160,19 +212,21 @@ const QuestionForm = ({ questions }) => {
       </div>
 
       <div className="center">
-        <Question
-          currentStep={currentStep}
-          question={currentQuestion}
-          answer={answers[currentStep] || ""}
-          onAnswerChange={handleInputChange}
-          onYesNoChange={handleYesNoChange}
-        />
+        {currentQuestion?.text && (
+          <Question
+            currentStep={currentStep}
+            question={currentQuestion}
+            answer={answers[currentStep] || ""}
+            onAnswerChange={handleInputChange}
+            onOptionChange={handleOption}
+          />
+        )}
 
         <div style={{ height: "1.5rem", marginTop: "0.5rem" }}>
           <p
             style={{
               color: "red",
-              fontSize: '1rem',
+              fontSize: "1rem",
               visibility: warning ? "visible" : "hidden",
               margin: 0,
             }}
@@ -181,7 +235,7 @@ const QuestionForm = ({ questions }) => {
           </p>
         </div>
 
-        {currentQuestion.type === "number" && (
+        {currentQuestion?.type === "number" && (
           <button
             onClick={handleNext}
             disabled={isNextDisabled} // Disable button if validation fails

@@ -43,6 +43,7 @@ Activate the virtual environment:
 ### 4. Install Python dependencies
 With the virtual environment activated, install the required Python packages:
 ```bash
+cd backend
 pip install -r requirements.txt
 ```
 

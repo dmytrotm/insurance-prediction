@@ -6,7 +6,7 @@
 }
 
 h1 {
-  color: #06038D;
+  /* color: #06038D; */
   font-family: Georgia, serif;
 }
 
@@ -46,6 +46,10 @@ body {
   justify-content: center; /* Horizontally center the content */
   align-items: center; /* Vertically center the content */
   text-align: center;
+}
+
+.option {
+  width: 75%;
 }
 
 .arrow {
@@ -140,6 +144,10 @@ input[type="number"]::-webkit-outer-spin-button {
 @media (max-width: 480px) {
   body {
     font-size: calc(14px + 2vmin); /* Larger font size for very small screens */
+  }
+
+  .option {
+    width: 100%;
   }
 
   #root {
